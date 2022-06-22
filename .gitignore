@@ -29,3 +29,6 @@ target/
 
 # ARCHIVO DE CONFIGURACION
 config.json
+
+# NODE
+node_modules
