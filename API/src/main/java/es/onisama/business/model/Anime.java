@@ -58,6 +58,9 @@ public class Anime implements Serializable {
     @Enumerated(EnumType.STRING)
     private Collection<GenerosEnum> generos;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "season_id")
+    private Season season;
 
     @Override
     public boolean equals(Object o) {
