@@ -1,9 +1,11 @@
 package es.onisama.business.service;
 
+import es.onisama.business.model.Anime;
+
 import java.util.List;
 
 public interface AnimesDiariosService {
 
-    public List<Anime> getAnimesDiarios();
+    List<Anime> getAnimesDiarios();
 
 }

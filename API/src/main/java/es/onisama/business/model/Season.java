@@ -1,9 +1,9 @@
 package es.onisama.business.model;
 
 import es.onisama.business.model.enumerated.SeasonsEnum;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,6 +14,7 @@ import java.util.List;
 @Table(name = "season")
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Season implements Serializable {
 
     @Serial
