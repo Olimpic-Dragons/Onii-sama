@@ -1,27 +1,15 @@
 {
-  "name": "bot",
+  "name": "Onii-sama Discord Bot",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "author": "DGuttmanSN y Zeus1123",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/rest": "^0.5.0",
-    "discord-api-types": "^0.34.0",
-    "discord-button-pages": "^1.1.9",
-    "discord.js": "^13.8.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Willy1123/Onii-sama.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Willy1123/Onii-sama/issues"
-  },
-  "homepage": "https://github.com/Willy1123/Onii-sama#readme",
-  "devDependencies": {},
-  "description": ""
+    "discord.js": "^14.6.0",
+    "node-fetch": "^3.2.10"
+  }
 }

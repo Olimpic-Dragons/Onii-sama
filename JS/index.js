@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
-const fetch = require('node-fetch');
+
 const config = require('./config.json');
-const animeflv = require('./animeflv.links.json');
 const {MessageActionRow, MessageButton, MessageEmbed} = require("discord.js");
 
 // CREA EL CLIENTE
