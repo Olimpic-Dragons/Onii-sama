@@ -1,8 +1,8 @@
 package es.onisama.business.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,6 +13,7 @@ import java.util.List;
 @Table(name = "year")
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Year implements Serializable {
 
     @Serial
@@ -27,4 +28,5 @@ public class Year implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "year")
     private List<Season> seasons;
+    
 }
