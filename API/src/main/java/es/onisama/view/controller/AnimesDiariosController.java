@@ -29,7 +29,7 @@ public class AnimesDiariosController {
     @Operation(summary = "Devuelve los animes del dia actual", description = "Devuelve una lista de tipo Anime con todos los animes que estan previstos emitir el dia de hoy")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/animes/dia")
-    public List<Anime> getAnimes(){
+    public List<Anime> getAnimesDiarios(){
         return this.animesDiariosService.getAnimesDiarios();
     }
 
