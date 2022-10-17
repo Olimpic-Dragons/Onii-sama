@@ -6,6 +6,7 @@ import es.api.business.service.AnimesDiariosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -16,11 +17,18 @@ public class AnimesDiariosServiceImpl implements AnimesDiariosService {
 
     @Override
     public List<Anime> getAnimesDiarios() {
+        Date date;
+        String hoy;
+        try{
+            date = new Date();
+            hoy = String.valueOf(date.getDay());
+        } catch (Exception ex){
+            throw ex;
+        }
         try {
-            this.animeRepository.findAnimeByTitulo("toradora");
+            return this.animeRepository.findAnimeByDiaSemana(hoy);
         } catch (Exception ex) {
             throw ex;
         }
-        return null;
     }
 }

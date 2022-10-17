@@ -35,6 +35,9 @@ public class Anime implements Serializable {
     @Column(length = 256, columnDefinition = "longtext")
     private String descripcion;
 
+    @Column
+    private String diaSemana;
+
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date fechaInicio;
 
@@ -42,10 +45,10 @@ public class Anime implements Serializable {
     private Date fechaFin;
 
     @Column
-    private int capitulosEmitidos;
+    private String capitulosEmitidos;
 
     @Column
-    private int capitulosTotales;
+    private String capitulosTotales;
 
     @Column
     private String imagen;
