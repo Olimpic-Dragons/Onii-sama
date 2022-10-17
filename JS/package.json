@@ -1,12 +1,12 @@
 {
-  "name": "bot",
+  "name": "Onii-sama Discord Bot",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "DGuttman y Zeus1123",
   "license": "ISC",
   "dependencies": {
     "@discordjs/rest": "^0.5.0",
@@ -16,12 +16,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Willy1123/Onii-sama.git"
+    "url": "git+https://github.com/Olimpic-Dragons/Onii-sama.git"
   },
   "bugs": {
-    "url": "https://github.com/Willy1123/Onii-sama/issues"
+    "url": "https://github.com/Olimpic-Dragons/Onii-sama/issues"
   },
-  "homepage": "https://github.com/Willy1123/Onii-sama#readme",
+  "homepage": "https://github.com/Olimpic-Dragons/Onii-sama#readme",
   "devDependencies": {},
   "description": ""
 }
