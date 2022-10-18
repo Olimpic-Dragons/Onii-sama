@@ -10,7 +10,6 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -22,7 +21,6 @@ import java.util.Date;
 @EqualsAndHashCode
 public class Anime implements Serializable {
 
-    @Serial
     private static final long serialVersionUID = 8788311634307919232L;
 
     @Id
@@ -69,4 +67,24 @@ public class Anime implements Serializable {
     @Enumerated(EnumType.STRING)
     private SeasonsEnum season;
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Anime{");
+        sb.append("id=").append(id);
+        sb.append(", titulo='").append(titulo).append('\'');
+        sb.append(", descripcion='").append(descripcion).append('\'');
+        sb.append(", diaSemana='").append(diaSemana).append('\'');
+        sb.append(", fechaInicio=").append(fechaInicio);
+        sb.append(", fechaFin=").append(fechaFin);
+        sb.append(", capitulosEmitidos='").append(capitulosEmitidos).append('\'');
+        sb.append(", capitulosTotales='").append(capitulosTotales).append('\'');
+        sb.append(", imagen='").append(imagen).append('\'');
+        sb.append(", urlAflv='").append(urlAflv).append('\'');
+        sb.append(", statusEnum=").append(statusEnum);
+        sb.append(", tipoEnum=").append(tipoEnum);
+        sb.append(", generos=").append(generos);
+        sb.append(", season=").append(season);
+        sb.append('}');
+        return sb.toString();
+    }
 }
