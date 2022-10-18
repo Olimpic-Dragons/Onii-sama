@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface AnimeRepository extends JpaRepository<Anime, Long> {
 
-    List<Anime> findAnimeByStatusEnumAndDiaSemana(StatusEnum status, String diaSemana);
+    List<Anime> findAnimeByDiaSemanaAndStatusEnum(String diaSemana, StatusEnum statusEnum);
+
+    List<Anime> findAllByStatusEnumAndDiaSemana(StatusEnum statusEnum, String diaSemana);
 
 }

@@ -14,8 +14,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AnimeCrearDto {
-
+public class AnimeDto {
     private String titulo;
     private String descripcion;
     private String diaSemana;
@@ -29,5 +28,4 @@ public class AnimeCrearDto {
     private TipoEnum tipoEnum;
     private Collection<GenerosEnum> generos;
     private SeasonsEnum season;
-
 }
