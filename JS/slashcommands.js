@@ -2,7 +2,6 @@ const fs = require("fs");
 const Discord = require("discord.js");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
-const { clientId, guild } = require("./config.json");
 const config = require("./config.json");
 const  commands = []
 const slashcommandsFiles = fs.readdirSync("./Commands").filter(file => file.endsWith("js"));
@@ -20,7 +19,7 @@ async function createSlash() {
     try{
         await rest.put(
             //quitando el GUILD_ID serviría de forma global
-            Routes.applicationCommands(clientId, guild), {
+            Routes.applicationCommands(config.clientId, config.guild), {
                 body: commands
             }
         )

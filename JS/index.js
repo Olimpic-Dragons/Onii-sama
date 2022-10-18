@@ -2,7 +2,6 @@
 const Discord = require("discord.js");
 const intents = new Discord.Intents();
 const config = require("./config.json");
-const fetch = require('node-fetch');
 
 // CREA EL CLIENTE
 const client = new Discord.Client({ intents: 32767 });
@@ -13,14 +12,15 @@ client.on('ready', () => console.log("Estoy listo"));
 const fs = require("fs");
 let { readdirSync } = require("fs");
 
+// Para manejar los comando con prefijo. Lo dejo por si algún día lo usamos
 client.commands = new Discord.Collection();
 const commandsFiles = fs.readdirSync("./Commands").filter(file => file.endsWith(".js"));
-
 for (const file of commandsFiles) {
     const command = require(`./Commands/${file}`);
     client.commands.set(command.name, command);
 }
 
+//Para manejar los comandos con "/"
 client.slashcommands = new Discord.Collection();
 const slashcommandsFiles = fs.readdirSync("./Commands").filter(file => file.endsWith("js"));
 
@@ -48,8 +48,8 @@ client.on("interactionCreate", async(interaction) => {
 
 });
 
-// PLANTILLA
 
+// Para manejar los comandos con prefijo. lo dejo por si algún día lo usamos.
 client.on("messageCreate", (message) => {
     if(message.content.startsWith(message)) {
         let prefix = ".";
