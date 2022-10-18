@@ -20,7 +20,7 @@ async function createSlash() {
     try{
         await rest.put(
             //quitando el GUILD_ID serviría de forma global
-            Routes.applicationCommand(clientId, guild), {
+            Routes.applicationCommands(clientId, guild), {
                 body: commands
             }
         )
