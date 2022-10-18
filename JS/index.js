@@ -1,62 +1,72 @@
 
-const Discord = require('discord.js');
+const Discord = require("discord.js");
 const intents = new Discord.Intents();
-const config = require('./config.json');
+const config = require("./config.json");
 const fetch = require('node-fetch');
 
 // CREA EL CLIENTE
 const client = new Discord.Client({ intents: 32767 });
 
-const fs = require("fs");
-let { readdirSync } = require("fs");
-
-
-// client.commands = new Discord.Collection();
-// const commands = fs.readdirSync("./Commands").filter(file => file.endsWith(".js"));
-// for (const file of commands) {
-//     const commandName = file.split(".")[0];
-//     const command = require(`./Commands/${commandName}`);
-//     client.commands.set(commandName, command);
-// }
 // SE EJECUTA CUANDO SE INICIA EL BOT
 client.on('ready', () => console.log("Estoy listo"));
 
+const fs = require("fs");
+let { readdirSync } = require("fs");
+
+client.commands = new Discord.Collection();
+const commandsFiles = fs.readdirSync("./Commands").filter(file => file.endsWith(".js"));
+
+for (const file of commandsFiles) {
+    const command = require(`./Commands/${file}`);
+    client.commands.set(command.name, command);
+}
+
 client.slashcommands = new Discord.Collection();
-const slashcommandsFiles = fs.readdirSync("./Commands").filter(file => file.endsWith(".js"));
+const slashcommandsFiles = fs.readdirSync("./Commands").filter(file => file.endsWith("js"));
 
 for(const file of slashcommandsFiles) {
     //const commandName = file.split(".")[0];
-    const command = require(`./Commands/${file}`);
+    const slash = require(`./Commands/${file}`);
     console.log(`Slash commands - ${file} cargado.`);
-    client.slashcommands.set(command.data.name, command);
-}
+    client.slashcommands.set(slash.data.name, slash);
+};
 
 client.on("interactionCreate", async(interaction) => {
     if (!interaction.isCommand()) return;
 
-    const Commands = client.slashcommands.get(interaction.commandName);
+    const slashcmds = client.slashcommands.get(interaction.commandName);
 
-    if (!Commands) return;
+    if (!slashcmds) return;
 
     try {
-        await Commands.run(client, interaction);
+        await slashcmds.run(client, interaction);
+        console.log("Interaction creada!")
     } catch (e) {
         console.error(e);
+        console.log("Error al crear la interaction!")
     }
 
-})
+});
 
 // PLANTILLA
-client.on("messageCreate", message => {
-    if(message.content.startsWith(prefix)) {
+
+client.on("messageCreate", (message) => {
+    if(message.content.startsWith(message)) {
+        let prefix = ".";
+
+        if (message.author.bot) return;
+        if (!message.content.startsWith(prefix)) return;
+
+        let usuario = message.mentions.members.first() || message.member;
         const args = message.content.slice(prefix.length).trim().split(/ +/g);
-        const commandName = args.shift();
-        const command = client.commands.get(commandName);
-        if (!command) {
-            command.run(client, message, args);
+        const commandName = args.shift().toLowerCase();
+
+        const cmd = client.commands.find((c) => c.name === command || c.alias && c.alias.includes(command))
+        if (cmd) {
+            cmd.execute(client, message, args);
         }
     }
-})
+});
 
 client.login(config.BOT_TOKEN)
 

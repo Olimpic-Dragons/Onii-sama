@@ -1,8 +1,8 @@
 const fs = require("fs");
 const Discord = require("discord.js");
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
-const { CLIENT_ID, GUILD_ID } = require("./config.json");
+const { REST } = require("@discordjs/rest");
+const { Routes } = require("discord-api-types/v9");
+const { clientId, guild } = require("./config.json");
 const config = require("./config.json");
 const  commands = []
 const slashcommandsFiles = fs.readdirSync("./Commands").filter(file => file.endsWith("js"));
@@ -14,18 +14,19 @@ for (const file of slashcommandsFiles) {
 
 const rest = new REST({ version: "9" }).setToken(config.BOT_TOKEN);
 
-createSlash();
+createSlash()
 
 async function createSlash() {
     try{
         await rest.put(
             //quitando el GUILD_ID serviría de forma global
-            Routes.applicationCommand(CLIENT_ID, GUILD_ID), {
+            Routes.applicationCommand(clientId, guild), {
                 body: commands
             }
         )
-        console.log("Slash commands agregados.")
+        console.log("Slash commands agregados.");
     } catch (e) {
         console.error(e);
+        console.log("Fallo al agregar los Slash commands.");
     }
 }
