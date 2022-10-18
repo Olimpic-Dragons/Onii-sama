@@ -1,225 +1,72 @@
-const Discord = require('discord.js');
 
-const config = require('./config.json');
-const {MessageActionRow, MessageButton, MessageEmbed} = require("discord.js");
+const Discord = require("discord.js");
+const intents = new Discord.Intents();
+const config = require("./config.json");
 
 // CREA EL CLIENTE
-const client = new Discord.Client({intents: 32767});
+const client = new Discord.Client({ intents: 32767 });
 
 // SE EJECUTA CUANDO SE INICIA EL BOT
-client.on('ready', () => console.log("Estoy listo"))
+client.on('ready', () => console.log("Estoy listo"));
 
-// EVENTO QUE ESCUCHA LA EJECUCION DE COMANDOS
-client.on('interactionCreate', async interaction => {
+const fs = require("fs");
+let { readdirSync } = require("fs");
+
+// Para manejar los comando con prefijo. Lo dejo por si algún día lo usamos
+client.commands = new Discord.Collection();
+const commandsFiles = fs.readdirSync("./Commands").filter(file => file.endsWith(".js"));
+for (const file of commandsFiles) {
+    const command = require(`./Commands/${file}`);
+    client.commands.set(command.name, command);
+}
+
+//Para manejar los comandos con "/"
+client.slashcommands = new Discord.Collection();
+const slashcommandsFiles = fs.readdirSync("./Commands").filter(file => file.endsWith("js"));
+
+for(const file of slashcommandsFiles) {
+    //const commandName = file.split(".")[0];
+    const slash = require(`./Commands/${file}`);
+    console.log(`Slash commands - ${file} cargado.`);
+    client.slashcommands.set(slash.data.name, slash);
+};
+
+client.on("interactionCreate", async(interaction) => {
     if (!interaction.isCommand()) return;
-    const {commandName} = interaction;
-    if (commandName === 'animestoday') {
-        imprimirAnimes();
-    }
-})
 
-// PLANTILLA
-client.on("messageCreate", async (message) => {
-    if (message.content.startsWith(`!page`)) {
-        let embeds = [
-            new MessageEmbed().setTitle(`embeds 1`),
-            new MessageEmbed().setTitle(`embeds 2`),
-            new MessageEmbed().setTitle(`embeds 3`),
-            new MessageEmbed().setTitle(`embeds 4`),
-            new MessageEmbed().setTitle(`embeds 5`),
-            new MessageEmbed().setTitle(`embeds 6`),
-        ];
-        await pagination(message, embeds)
+    const slashcmds = client.slashcommands.get(interaction.commandName);
+
+    if (!slashcmds) return;
+
+    try {
+        await slashcmds.run(client, interaction);
+        console.log("Interaction creada!")
+    } catch (e) {
+        console.error(e);
+        console.log("Error al crear la interaction!")
     }
-})
+
+});
+
+
+// Para manejar los comandos con prefijo. lo dejo por si algún día lo usamos.
+client.on("messageCreate", (message) => {
+    if(message.content.startsWith(message)) {
+        let prefix = ".";
+
+        if (message.author.bot) return;
+        if (!message.content.startsWith(prefix)) return;
+
+        let usuario = message.mentions.members.first() || message.member;
+        const args = message.content.slice(prefix.length).trim().split(/ +/g);
+        const commandName = args.shift().toLowerCase();
+
+        const cmd = client.commands.find((c) => c.name === command || c.alias && c.alias.includes(command))
+        if (cmd) {
+            cmd.execute(client, message, args);
+        }
+    }
+});
 
 client.login(config.BOT_TOKEN)
 
-/**
- *
- * @param {CommandInteraction} interaction
- * @param {Array} embeds
- * */
-async function pagination(interaction, embeds) {
-    let allbuttons = new MessageActionRow().addComponents([
-        new MessageButton().setStyle('SECONDARY').setCustomId('0').setLabel('<<'),
-        new MessageButton().setStyle('SECONDARY').setCustomId('1').setLabel('<'),
-        new MessageButton().setStyle('SECONDARY').setCustomId('2').setLabel('X'),
-        new MessageButton().setStyle('SECONDARY').setCustomId('3').setLabel('>'),
-        new MessageButton().setStyle('SECONDARY').setCustomId('4').setLabel('>>')
-    ]);
-    // send message if embeds is 1
-    if (embeds.length == 1) {
-        if (interaction.deferred) {
-            return interaction.followUp({
-                embeds: [embeds[0]],
-            });
-        } else {
-            return interaction.reply({
-                embeds: [embeds[0]],
-            });
-        }
-    }
-
-    embeds = embeds.map((embed, index) => {
-        return embed.setFooter({
-            text: `Page ${index + 1}/${embeds.length}`,
-            iconURL: interaction.guild.iconURL({dynamic: true}),
-        });
-    });
-
-    let sendMsg;
-    if (interaction.deferred) {
-        sendMsg = await interaction.followUp({
-            embeds: [embeds[0]],
-            components: [allbuttons]
-        });
-    } else {
-        sendMsg = await interaction.reply({
-            embeds: [embeds[0]],
-            components: [allbuttons]
-        });
-    }
-    let filter = (m) => m.member.id === interaction.member.id;
-
-    const collector = await sendMsg.createMessageComponentCollector({
-        filter: filter,
-        time: 3000,
-    });
-
-    let currentPage = 0;
-    collector.on('collect', async (b) => {
-        if (b.isButton()) {
-            await b.deferUpdate().catch(e => null)
-            // page first
-            switch (b.customId) {
-                case "0": {
-                    if (currentPage != 0) {
-                        currentPage = 0;
-                        await sendMsg.edit({
-                            embeds: [embeds[currentPage]],
-                            comptents: [allbuttons]
-                        }).catch((e) => null);
-                    }
-                } break;
-                case "1": {
-                    if (currentPage !== 0) {
-                        currentPage -= 1;
-                        await sendMsg.edit({
-                            embeds: [embeds[currentPage]],
-                            comptents: [allbuttons]
-                        }).catch((e) => null);
-                    } else {
-                        currentPage = embeds.length -1;
-                        await sendMsg.edit({
-                            embeds: [embeds[currentPage]],
-                            comptents: [allbuttons]
-                        }).catch((e) => null);
-                    }
-                } break;
-                case "2": {
-                    allbuttons.components.forEach((btn) => btn.setDisabled(true));
-                    await sendMsg.edit({
-                        embeds: [embeds[currentPage]],
-                        comptents: [allbuttons]
-                    }).catch((e) => null);
-                } break;
-                case "3": {
-                    if (currentPage < embeds.length - 1) {
-                        currentPage++;
-                        await sendMsg.edit({
-                            embeds: [embeds[currentPage]],
-                            comptents: [allbuttons]
-                        }).catch((e) => null);
-                    } else {
-                        currentPage = 0;
-                        await sendMsg.edit({
-                            embeds: [embeds[currentPage]],
-                            comptents: [allbuttons]
-                        }).catch((e) => null);
-                    }
-                } break;
-                case "4": {
-                    currentPage = embeds.length - 1;
-                    await sendMsg.edit({
-                        embeds: [embeds[currentPage]],
-                        comptents: [allbuttons]
-                    }).catch((e) => null);
-                } break;
-
-                default:
-                    break;
-            }
-
-        }
-    });
-
-    collector.on('end', async () => {
-        allbuttons.components.forEach((btn) => btn.setDisabled(true));
-        await sendMsg.edit({
-            embeds: [embeds[currentPage]],
-            comptents: [allbuttons]
-        }).catch(e => null);
-    })
-}
-
-
-function imprimirAnimes() {
-    // RECOGER DIA ACTUAL
-    let dia = new Date().getDay();
-    let diaString;
-
-    // ALMACENAR EL STRING DEL DIA EN LA VARIABLE diaString
-    switch (dia) {
-        case 1:
-            diaString = "monday";
-            break;
-        case 2:
-            diaString = "tuesday";
-            break;
-        case 3:
-            diaString = "wednesday";
-            break;
-        case 4:
-            diaString = "thursday";
-            break;
-        case 5:
-            diaString = "friday";
-            break;
-        case 6:
-            diaString = "saturday";
-            break;
-        case 0:
-            diaString = "sunday";
-            break;
-    }
-
-    // GUARDAR CANAL DE TEXTO EN UNA CONSTANTE
-    channel = client.channels.cache.get('989097992533454858');
-
-    // HTTP REQUEST A LA API
-    // DOCUMENTACION: https://docs.api.jikan.moe/
-    fetch("https://api.jikan.moe/v4/schedules/" + diaString)
-        .then(response => response.json())
-        .then(datos => datos.data)
-        .then(animes => {
-            animes.forEach(element => {
-                let hora = element['broadcast']['time']
-                if (hora == null) {
-                    hora = "no anunciado";
-                }
-
-                // MENSAJE EMBEBIDO
-                const mensajeEmbedido = new Discord.MessageEmbed()
-                    .setTitle(element['title'])
-                    .setURL(element['url'])
-                    .setThumbnail(element['images']['jpg']['image_url'])
-                    .addField("Hora de emisión: ", hora, true)
-
-                // ENVIAR MENSAJE EN EL CANAL
-                channel.send({
-                    embeds: [mensajeEmbedido]
-                }).then(console.log).catch(console.error)
-            });
-        })
-}
