@@ -1,0 +1,116 @@
+
+let animes;
+let pages;
+
+client.on("interactionCreate", async (interaction) => {
+    /**
+     * HTTP REQUEST A LA API, NO EJECUTA NADA MAS HASTA QUE NO OBTIENE UNA RESPUSTA (AWAIT)
+     */
+    const httpRequest = await request("http://localhost:8080/animes/dia",{method:"GET"}).then(data => getJSONResponse(data.body))
+    crearPages()
+    if (pages.length >= 1) {
+        paginationEmbed(interaction, pages, 100000);
+    } else {
+        interaction.reply({embeds: [new MessageEmbed().setTitle("No hay animes")]})
+    }
+});
+
+
+// PARSEAR HTTP RESPONSE
+async function getJSONResponse(body) {
+    animes = [];
+    let fullBody = '';
+    if (!body) {
+        throw new Error("Body vacío");
+    }
+    for await (const data of body) {
+        fullBody += data.toString();
+    }
+    const json = (JSON.parse(fullBody));
+    for (const anime of json) {
+        animes.push(anime);
+    }
+}
+
+// FUNCIÓN PARA CREAR LOS MENSAJES EMBEBIDOS, SE AGREGAN AL ARRAY PAGES
+/**
+ * FUNCIÓN PARA CREAR LOS MENSAJES EMBEBIDOS, SE AGREGAN AL ARRAY PAGES
+ * Usamos ‎ como carácter vacío. Nos ahorrará problemas.
+ */
+async function crearPages() {
+    pages = []
+    for (const anime of animes) {
+        let fecha;
+        if (!anime.descripcion) {
+            anime.descripcion = "Sin descripción. "
+        }
+        if (!anime.fechaInicio) {
+            fecha = "‎ "
+            anime.fechaInicio = "‎ "
+        } else {
+            let fechanueva = new Date(anime.fechaInicio)
+            console.log(fechanueva)
+            fecha = fechanueva.getDay() + "-" + fechanueva.getMonth() + "-" + fechanueva.getFullYear()
+        }
+        if (!anime.fechaFin) {
+            anime.fechaFin = "‎ "
+        }
+        if (!anime.capitulosEmitidos) {
+            anime.capitulosEmitidos = "‎ "
+        }
+        if (!anime.capitulosTotales) {
+            anime.capitulosTotales = "‎ "
+        }
+        if (!anime.imagen) {
+            anime.imagen = "https://cdn.discordapp.com/attachments/471212660461928459/1030951899807088680/unknown.png"
+        }
+        if (!anime.urlAflv) {
+            anime.urlAflv = "https://www.google.com"
+        }
+        if (!anime.statusEnum) {
+            anime.statusEnum = "‎ "
+        }
+        if (!anime.tipoEnum) {
+            anime.tipoEnum = "‎ "
+        }
+        if (!anime.generos) {
+            anime.generos = "‎ "
+        }
+        if (!anime.season) {
+            anime.season = "‎ "
+        }
+        const embed = new MessageEmbed()
+            .setColor("#d5d90b")
+            .setTitle(anime.titulo)
+            .addFields(
+                {
+                    name: "‎ ",
+                    value: anime.descripcion
+                }, {
+                    name: "‎ ",
+                    value: "Informacion"
+                }, {
+                    name: "Capitulos emitidos",
+                    value: anime.capitulosEmitidos,
+                    inline: true
+                }, {
+                    name: "Capitulos previstos",
+                    value: anime.capitulosTotales,
+                    inline: true
+                }, {
+                    name: "Formato",
+                    value: anime.tipoEnum,
+                    inline: true
+                }, {
+                    name: "Fecha de estreno",
+                    value: fecha,
+                    inline: true
+                }, {
+                    name: "‎ ",
+                    value: "API Olimpic Dragons"
+                }
+            )
+            .setThumbnail(anime.imagen)
+        pages.push(embed)
+    }
+}
