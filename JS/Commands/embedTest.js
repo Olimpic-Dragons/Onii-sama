@@ -1,11 +1,11 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Discord = require("discord.js");
-const buttonPages = require("../Funciones/pagination");
+const buttonPages = require("../Funciones/pagination.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("embedTest")
+        .setName("embed")
         .setDescription("Mensaje embed de prueba"),
 
     async run(client, interaction) {

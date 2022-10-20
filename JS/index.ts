@@ -2,7 +2,6 @@ const Discord = require("discord.js");
 const intents = new Discord.Intents();
 const config = require("./config.json");
 const {request} = require('undici');
-const paginationEmbed = require('discordjs-button-pagination');
 const {MessageEmbed} = require('discord.js');
 
 // CREA EL CLIENTE

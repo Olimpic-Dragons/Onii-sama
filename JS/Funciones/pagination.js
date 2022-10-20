@@ -1,7 +1,6 @@
 const {
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonSyle,
+    MessageActionRow,
+    MessageButton,
     ComponentType,
 } = require("discord.js");
 
@@ -29,25 +28,26 @@ async function buttonPages(interaction, pages, time = 60000) {
     }
 
     // adding buttons
-    const prev = new ButtonBuilder()
+    const prev = new MessageButton()
         .setCustomId("prev")
         .setEmoji("◀️")
-        .setStyle(ButtonSyle.Primary)
+        .setStyle("PRIMARY")
         .setDisabled(true);
 
-    const home = new ButtonBuilder()
+    const home = new MessageButton()
         .setCustomId("home")
         .setEmoji("🏠")
-        .setStyle(ButtonSyle.Danger)
+        .setStyle("DANGER")
         .setDisabled(true);
 
-    const next = new ButtonBuilder()
+    const next = new MessageButton()
         .setCustomId("next")
         .setEmoji("▶️")
-        .setStyle(ButtonSyle.Primary)
+        .setStyle("PRIMARY")
         .setDisabled(true);
 
-    const buttonRow = new ActionRowBuilder().addComponents(prev, home, next);
+    const buttonRow = new MessageActionRow().addComponents(prev, home, next);
+    //const buttonRow = [prev, home, next];
     let index = 0;
 
     const currentPage = await interaction.editReply({
@@ -58,7 +58,7 @@ async function buttonPages(interaction, pages, time = 60000) {
 
     // creating the collector
     const collector = await currentPage.createMessageComponentCollector({
-        componentType: ComponentType.Button,
+        componentType: "BUTTON",
         time,
     });
 
