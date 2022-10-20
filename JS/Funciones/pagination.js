@@ -1,7 +1,6 @@
 const {
     MessageActionRow,
-    MessageButton,
-    ComponentType,
+    MessageButton
 } = require("discord.js");
 
 async function buttonPages(interaction, pages, time = 60000) {
@@ -43,8 +42,7 @@ async function buttonPages(interaction, pages, time = 60000) {
     const next = new MessageButton()
         .setCustomId("next")
         .setEmoji("▶️")
-        .setStyle("PRIMARY")
-        .setDisabled(true);
+        .setStyle("PRIMARY");
 
     const buttonRow = new MessageActionRow().addComponents(prev, home, next);
     //const buttonRow = [prev, home, next];
@@ -89,7 +87,7 @@ async function buttonPages(interaction, pages, time = 60000) {
             home.setDisabled(true);
         } else {
             prev.setDisabled(false);
-            prev.setDisabled(false);
+            home.setDisabled(false);
         }
 
         if (index === pages.length - 1) {
