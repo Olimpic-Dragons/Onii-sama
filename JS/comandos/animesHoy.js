@@ -6,13 +6,13 @@ const axios = require("axios");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("animeshoy")
+        .setName("animes_hoy")
         .setDescription("Mensaje embed de prueba"),
 
     async run(message) {
         axios.get('http://localhost:8080/animes/dia')
             .then((res) => {
-                console.log("RES:", res)
+                console.log("RES:", res.data)
             })
             .catch((err) => {
                 console.error("ERR:", err)

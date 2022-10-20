@@ -3,7 +3,7 @@ const {
     MessageButton
 } = require("discord.js");
 
-async function buttonPages(interaction, pages, time = 60000) {
+async function buttonPages(interaction, pages, tipo, time = 60000) {
     // errors
     if (!interaction) throw new Error("Proporcione un argumento de interacción.");
     if (!pages) throw new Error("Proporcione un argumento de página.");
@@ -48,7 +48,7 @@ async function buttonPages(interaction, pages, time = 60000) {
     let index = 0;
 
     const currentPage = await interaction.editReply({
-        embeds: [pages[index]],
+        embeds: [pages[index].setFooter({ text: `${tipo} ${index + 1} / ${pages.length}` })],
         components: [buttonRow],
         fetchReply: true,
     });
@@ -96,7 +96,7 @@ async function buttonPages(interaction, pages, time = 60000) {
         }
 
         await currentPage.edit({
-            embeds: [pages[index]],
+            embeds: [pages[index].setFooter({ text: `${tipo} ${index + 1} / ${pages.length}` })],
             components: [buttonRow],
         });
 
