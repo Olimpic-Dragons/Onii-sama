@@ -3,15 +3,15 @@ const {
     MessageButton
 } = require("discord.js");
 
-async function buttonPages(interaction, pages, time = 60000) {
+async function buttonPages(interaction, pages, tipo, time = 60000) {
     // errors
-    if (!interaction) throw new Error("Please provide an interaction argument");
-    if (!pages) throw new Error("Please provide a page argument");
+    if (!interaction) throw new Error("Proporcione un argumento de interacción.");
+    if (!pages) throw new Error("Proporcione un argumento de página.");
     if (!Array.isArray(pages)) throw new Error("pages must be an array");
 
-    if (typeof time !== "number") throw new Error("Time must be a number.");
+    if (typeof time !== "number") throw new Error("Time debe ser un número.");
     if (parseInt(time) < 30000) {
-        throw new Error("Time must be greater than 30 Seconds");
+        throw new Error("Time tiene que ser mayor de 30 Segundos");
     }
 
     // defer reply
@@ -45,11 +45,10 @@ async function buttonPages(interaction, pages, time = 60000) {
         .setStyle("PRIMARY");
 
     const buttonRow = new MessageActionRow().addComponents(prev, home, next);
-    //const buttonRow = [prev, home, next];
     let index = 0;
 
     const currentPage = await interaction.editReply({
-        embeds: [pages[index]],
+        embeds: [pages[index].setFooter({ text: `${tipo} ${index + 1} / ${pages.length}` })],
         components: [buttonRow],
         fetchReply: true,
     });
@@ -97,7 +96,7 @@ async function buttonPages(interaction, pages, time = 60000) {
         }
 
         await currentPage.edit({
-            embeds: [pages[index]],
+            embeds: [pages[index].setFooter({ text: `${tipo} ${index + 1} / ${pages.length}` })],
             components: [buttonRow],
         });
 

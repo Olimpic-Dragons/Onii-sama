@@ -1,13 +1,13 @@
-const fs = require("fs");
 const Discord = require("discord.js");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
+const fs = require("fs");
 const config = require("./config.json");
 const  commands = []
-const slashcommandsFiles = fs.readdirSync("./Commands").filter(file => file.endsWith("js"));
+const slashcommandsFiles = fs.readdirSync("./comandos").filter(file => file.endsWith("js"));
 
 for (const file of slashcommandsFiles) {
-    const slash = require(`./Commands/${file}`);
+    const slash = require(`./comandos/${file}`);
     commands.push(slash.data.toJSON());
 }
 

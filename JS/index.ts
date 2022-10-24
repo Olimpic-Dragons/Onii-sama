@@ -10,33 +10,23 @@ const client = new Discord.Client({intents: 32767});
 // SE EJECUTA CUANDO SE INICIA EL BOT
 client.on('ready', () => console.log("Estoy listo"));
 
+/**
+ * Manejo de slashcommands
+ */
 const fs = require("fs");
 let {readdirSync} = require("fs");
 
-// Para manejar los comando con prefijo. Lo dejo por si algún día lo usamos
-client.commands = new Discord.Collection();
-const commandsFiles = fs.readdirSync("./Commands").filter(file => file.endsWith(".js"));
-for (const file of commandsFiles) {
-    const command = require(`./Commands/${file}`);
-    client.commands.set(command.name, command);
-}
-
-//Para manejar los comandos con "/"
 client.slashcommands = new Discord.Collection();
-const slashcommandsFiles = fs.readdirSync("./Commands").filter(file => file.endsWith("js"));
+const slashcommandsFiles = fs.readdirSync("./comandos").filter(file => file.endsWith("js"));
 
 for (const file of slashcommandsFiles) {
-    //const commandName = file.split(".")[0];
-    const slash = require(`./Commands/${file}`);
+    const slash = require(`./comandos/${file}`);
     console.log(`Slash commands - ${file} cargado.`);
     client.slashcommands.set(slash.data.name, slash);
 }
-;
 
 client.on("interactionCreate", async (interaction) => {
-    /**
-     * Majejo de slashcommands
-     */
+
     if (!interaction.isCommand()) return;
     const slashcmds = client.slashcommands.get(interaction.commandName);
     if (!slashcmds) return;
