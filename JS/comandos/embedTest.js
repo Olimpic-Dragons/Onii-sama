@@ -5,7 +5,7 @@ const buttonPages = require("../funciones/pagination.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("embed")
+        .setName("embed-test")
         .setDescription("Mensaje embed de prueba"),
 
     async run(client, interaction) {
