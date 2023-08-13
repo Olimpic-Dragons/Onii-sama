@@ -1,3 +1,4 @@
+/* Versión 0.1 */
 const { Client, GatewayIntentBits, Partials, Collection } = require("discord.js");
 const config = require("../config.json");
 
